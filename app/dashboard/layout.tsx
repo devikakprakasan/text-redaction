@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardLayout({
   children,
@@ -11,7 +12,6 @@ export default function DashboardLayout({
   const router = useRouter();
   const [currentPath, setCurrentPath] = useState("");
 
-  //  TOKEN-BASED AUTH CHECK
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -22,7 +22,6 @@ export default function DashboardLayout({
     setCurrentPath(window.location.pathname);
   }, []);
 
-  //  LOGOUT
   function logout() {
     localStorage.removeItem("token");
     router.push("/login");
@@ -31,43 +30,38 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-screen">
       {/* SIDEBAR */}
-      <aside className="w-64 bg-slate-800 text-white p-6">
-        <h2 className="text-lg font-bold mb-8">
+      <aside className="w-64 bg-slate-900 text-white p-6">
+        <h2 className="text-xl font-bold mb-6">
           Dashboard
         </h2>
 
-        <p
-          onClick={() => router.push("/dashboard")}
-          className={`cursor-pointer p-2 rounded mb-2 ${
-            currentPath === "/dashboard"
-              ? "bg-slate-700 text-green-400"
-              : "hover:bg-slate-700"
-          }`}
-        >
-          Home
-        </p>
+        <div className="flex flex-col gap-3">
+          <Button
+            variant={currentPath === "/dashboard" ? "default" : "outline"}
+            onClick={() => router.push("/dashboard")}
+          >
+            Home
+          </Button>
 
-        <p
-          onClick={() => router.push("/dashboard/redact")}
-          className={`cursor-pointer p-2 rounded ${
-            currentPath === "/dashboard/redact"
-              ? "bg-slate-700 text-green-400"
-              : "hover:bg-slate-700"
-          }`}
-        >
-          Text Redaction
-        </p>
+          <Button
+            variant={currentPath === "/dashboard/redact" ? "default" : "outline"}
+            onClick={() => router.push("/dashboard/redact")}
+          >
+            Text Redaction
+          </Button>
 
-        <p
-          onClick={logout}
-          className="cursor-pointer mt-10 p-2 rounded text-red-300 hover:bg-slate-700 hover:text-red-400"
-        >
-          Logout
-        </p>
+          <Button
+            variant="destructive"
+            className="mt-10"
+            onClick={logout}
+          >
+            Logout
+          </Button>
+        </div>
       </aside>
 
-      {/* MAIN */}
-      <main className="flex-1 bg-slate-100 p-6">
+      {/* MAIN CONTENT */}
+      <main className="flex-1 bg-slate-50 p-8">
         {children}
       </main>
     </div>
